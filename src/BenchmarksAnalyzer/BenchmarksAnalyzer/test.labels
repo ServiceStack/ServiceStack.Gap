@@ -1,0 +1,7 @@
+/fortunes DB with Razor View
+/updates DB Update
+/db Single DB Query
+/queries Multiple DB Queries (01)
+/queries?queries=5 Multiple DB Queries (05)
+/queries?queries=20 Multiple DB Queries (20)
+/queries?queries=10 Multiple DB Queries (10)

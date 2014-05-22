@@ -1,0 +1,412 @@
+﻿@inherits ViewPage<EditTestPlanResponse>
+@{
+    var hrefVewPlan = new ViewTestPlan { Slug = Model.Slug, Id = Model.TestRunId }.ToGetUrl();
+    var hrefSearchResults = new SearchTestResults { TestPlanId = Model.Id, TestRunId = Model.TestRunId }.ToGetUrl();
+    var hrefUploadFiles = new UploadTestResults { TestPlanId = Model.Id, TestRunId = Model.TestRunId }.ToPostUrl();
+}
+
+<link href="/Scripts/fineuploader-3.2.css" rel="stylesheet" />
+<script src="/Scripts/jquery.fineuploader-3.2.min.js"></script>
+
+<style>
+    #Contents {
+        width: 450px;
+        height: 100px;
+    }
+
+    .intro {
+        width: 980px;
+        margin: 60px 0 0 0;
+    }
+
+    #testruns .list-group-item {
+        padding: 12px 15px;
+    }
+
+    #testruns td {
+        vertical-align: top;
+        padding: 0 10px 0 0;
+    }
+
+    #testruns td:first-child {
+        width: 500px;
+    }
+</style>
+
+<div class="modal fade" id="modalCreateTestRun">
+    <div class="modal-dialog">
+        <form id="formCreateTestRun" action="/testplans/@Model.Id/testruns">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Create New Test Run</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="error-summary alert alert-danger"></p>
+                    <div class="form-group">
+                        <label>Series Id:</label>
+                        <input class="form-control" type="text" name="SeriesId" value="Created on @(DateTime.UtcNow.ToString("yyyy-MM-dd"))" placeholder="optional"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<h2>@Model.Name</h2>
+
+<p>
+    Add new test results to analyze the results of your Apache benchmarks below:    
+</p>
+
+<div id="testruns" style="display: none;">
+    <table>
+        <tr>
+            <td>
+                <div class="list-group">
+                </div>
+            </td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-lg btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-share-alt"></span>
+                        Go to another test run
+                        <span class="caret"></span>
+                    </button>
+                    <ul id="existing-testruns" class="dropdown-menu" role="menu">
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div style="width: 490px;">
+    <h4 id="lnkViewResults" style="margin: 0 0 20px 0"></h4>
+</div>
+
+<div class="clearfix"></div>
+
+<h4 style="margin: 40px 0 10px 0">Add more results to this test run</h4>
+
+<div style="float: left; padding: 0 20px 0 0">
+
+    <p>
+        Upload multiple apache benchmark output files directly or as batches in .zip's
+    </p>
+    
+    <div style="position: absolute; z-index: 1; margin: 10px 0 0 220px; user-select: none">
+        <input id="chkCreateTestRuns" type="checkbox"/>
+        <label for="chkCreateTestRuns" style="font-weight: normal">
+            Create new test run for each .zip
+        </label>
+    </div>
+
+    <div id="uploadtestresults">
+        <span class="help-block"></span>
+        <noscript>
+            <input type="file" id="upload" name="upload" />
+        </noscript>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+<div id="testresults" style="display: none;">
+    <hr />
+    <h3>Test Results</h3>
+    <table class="table table-striped" style="width: 100%;">
+        <thead>
+            <th>Id</th>
+            <th>Software</th>
+            <th>Host</th>
+            <th>Request Path</th>
+            <th>Request Length</th>
+            <th>Concurrency</th>
+            <th>Time Taken</th>
+            <th>Total Requests</th>
+            <th>Failed Requests</th>
+            <th>Total Transferred</th>
+            <th>Html Transferred</th>
+            <th>Requests /s</th>
+            <th>Time per Request</th>
+            <th>Transfer Rate</th>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="clearfix"></div>
+
+<div id="labels" style="width: 980px; display: none; margin: 60px 0">
+    <hr/>
+    <h4>Markup Graphs with Custom Labels</h4>
+    <form id="formUpdateLabels" action="@(new UpdateTestPlanLabels { Id = Model.Id }.ToPostUrl())" method="POST">
+        <div style="float: right;">
+            <div class="input-group" style="width: 200px;">
+                <span class="input-group-addon" style="padding: 2px 0 0 0">
+                    <input id="chkEditLabels" type="checkbox" data-click="editLabels">
+                    <label for="chkEditLabels" style="padding: 0 0 0 5px;">edit labels</label>
+                </span>
+                <span class="input-group-btn">
+                    <button id="btnSaveLabels" class="btn btn-success disabled" type="submit" data-click="saveLabels">save</button>
+                </span>
+            </div>
+        </div>
+        <p>
+            Make your charts more readable by assigning user-defined labels to your results
+        </p>
+        <table class="table table-striped" style="margin:0">
+            <thead>
+                <tr>
+                    <th>Server Labels</th>
+                    <th>Test Labels</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="server-labels" style="width:50%">
+                        <div class="preview-labels"></div>
+                        <textarea name="ServerLabels" style="width: 100%; height: 200px;"></textarea>
+                    </td>
+                    <td class="test-labels" style="width:50%">
+                        <div class="preview-labels"></div>
+                        <textarea name="TestLabels" style="width: 100%; height: 200px;"></textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<script>
+    var Model = {
+        TestPlan: @Model.AsRawJson(),
+        ActiveTestRun: null,
+        OtherTestRuns: [],
+        ResultsUploaded: [],
+        
+        addNewUploads: function(r) {
+            this.ResultsUploaded = this.ResultsUploaded.concat(r || []);
+            refreshTestRuns();
+        },
+        clearUploads: function() {
+            this.ResultsUploaded = [];
+        },
+        setTestRuns: function(runs) {
+            var isActive = function(r) { return r.Id == this.TestPlan.TestRunId; }.bind(this);
+            this.ActiveTestRun = runs.filter(isActive)[0];
+            this.OtherTestRuns = runs.filter(function (r) { return !isActive(r); });
+        },
+        setLabels: function(r) {
+            this.TestPlan.ServerLabels = r.ServerLabels || {};
+            this.TestPlan.TestLabels = r.TestLabels || {};
+        },
+        apply: function(){}
+    };
+
+    function Views(model) {
+        this.model = model;
+
+        var render = function() {
+            for (var name in this) {
+                if (typeof this[name] != 'function') continue;
+                this[name](model);
+            }
+        }.bind(this);
+        
+        for (var k in model) {
+            if (typeof model[k] != 'function') continue;
+            model[k] = (function(fn) {
+                return function() {
+                    fn.apply(model, arguments);
+                    render();
+                };
+            })(model[k]);
+        }
+    }
+    Views.prototype = {
+        activeTestRun: function() {
+            var r = this.model.ActiveTestRun;
+            if (!r) return;
+            $("#testruns").show().find(".list-group").html(
+                "<a " + (r.TestResultsCount > 0 ? ' href="@hrefVewPlan"' : '')
+                    + " class='list-group-item' data-click='showRun:" + r.Id + "'>"
+                    + '<span class="badge">' + r.TestResultsCount + '</span>'
+                    + r.SeriesId
+                    + "</a>");
+
+            $("#lnkViewResults").html(r.TestResultsCount == 0
+                ? '<span class="disabled">view results</span> <span style="color:#ccc">|</span> <span class="disabled">search results</span>'
+                : '<a href="@hrefVewPlan">view results</a> ' +
+                    '<span style="color:#ccc">|</span> ' +
+                    '<a href="@hrefSearchResults">search results</a>');
+        },
+        otherTestRuns: function() {
+            var runs = this.model.OtherTestRuns;
+
+            var html = runs.map(function(r) {
+                return '<li><a href="/testplans/@Model.Id/testruns/' + r.Id + '/edit">'
+                    + r.SeriesId
+                    + '</a></li>';
+            });
+
+            if (runs.length > 0)
+                html.push('<li class="divider"></li>');
+
+            html.push('<li><a href="#" data-click="createTestRun">'
+                + '<span class="glyphicon glyphicon-plus"></span> '
+                + ' Create new test run</a></li>');
+
+            $("#existing-testruns").html(html.join(''));
+        },
+        hasOtherRuns: function() {
+            var hasRuns = this.model.OtherTestRuns.length > 0;
+            $("#btnDeleteRun").toggle(hasRuns);
+        },
+        newTestResults: function() {
+            var results = this.model.ResultsUploaded;
+            if (results.length > 0) {
+                $("#testresults").show().find("TABLE tbody").html(
+                    results.map(function(r) {
+                        return "<tr>" +
+                            "<td>" + r.Id + "</td>" +
+                            "<td>" + r.Software + "</td>" +
+                            "<td>" + r.Hostname + ":" + r.Port + "</td>" +
+                            "<td>" + r.RequestPath + "</td>" +
+                            "<td>" + r.RequestLength + "</td>" +
+                            "<td>" + r.Concurrency + "</td>" +
+                            "<td>" + r.TimeTaken + "</td>" +
+                            "<td>" + r.TotalRequests + "</td>" +
+                            "<td>" + r.FailedRequests + "</td>" +
+                            "<td>" + r.TotalTransferred + "</td>" +
+                            "<td>" + r.HtmlTransferred + "</td>" +
+                            "<td>" + r.RequestsPerSec + "</td>" +
+                            "<td>" + r.TimePerRequest + "</td>" +
+                            "<td>" + r.TransferRate + "</td>" +
+                            "</tr>";
+                    }));
+                var total = $("#testresults tbody tr").length;
+                $("#testresults h3").html(total == 1
+                    ? "1 test result was added"
+                    : total + " test results were added");
+            } else {
+                $(".qq-upload-list li")
+                    .remove();
+                $("#testresults")
+                    .hide()
+                    .find("TABLE tbody")
+                    .html("");
+            }
+        },
+        testPlanLabels: function() {
+            var serverLabels = this.model.TestPlan.ServerLabels || {},
+                testLabels = this.model.TestPlan.TestLabels || {},
+                htmlTable = function(map) {
+                    var html = Object.keys(map).map(function(k) {
+                        return "<tr><th>" + k + "</th><td>" + map[k] + "</td></tr>";
+                    }).join('');
+                    return "<table class='table table-bordered' style='margin:0'>" + html + "</table>";
+                },
+                textareaText = function(map) {
+                    return Object.keys(map).map(function(key) {
+                        return key + " " + map[key] + "\n";
+                    }).join('');
+                },
+                editMode = $("#chkEditLabels")[0].checked;
+        
+            $("#labels").toggle(Object.keys(serverLabels).length > 0);
+
+            $("#labels textarea").toggle(editMode);
+            $("#labels .preview-labels").toggle(!editMode);
+            $("#btnSaveLabels").toggleClass("disabled", !editMode);
+
+            $(".server-labels textarea").val(textareaText(serverLabels));
+            $(".server-labels .preview-labels").html(htmlTable(serverLabels));
+
+            $(".test-labels textarea").val(textareaText(testLabels));
+            $(".test-labels .preview-labels").html(htmlTable(testLabels));
+        }
+    };   
+    Model.Views = new Views(Model);
+
+    //bind global event handlers
+    $(document).bindHandlers({
+        createTestRun: function() {
+            $("#modalCreateTestRun")
+                .on('shown.bs.modal', function() {
+                    $(this).find("INPUT").first().focus();
+                })
+                .modal('show');
+            
+            $("#modalCreateTestRun INPUT").first().focus(function() {
+                var $this = $(this); //fix for Chrome
+                $this.select().mouseup(function() { $this.unbind("mouseup"); return false; });
+            });
+        },
+        deleteTestPlan: function(planId) {
+            $("#modalDeleteTestPlan").modal('show');
+        },
+        deleteTestRun: function(runId) {
+            $("#modalDeleteTestRun").modal('show');
+        },
+        editLabels: Model.apply,
+        saveLabels: function() {}
+    });
+    
+    //bind forms
+    $("#formCreateTestRun").bindForm();
+    $("#formDeleteTestPlan").bindForm();
+    $("#formDeleteTestRun").bindForm();
+    $("#formUpdateLabels").bindForm({
+         success: function(r) {
+             $("#chkEditLabels")[0].checked = false;
+             Model.setLabels(r);
+         }
+    });
+    
+    $("#formAddTestResult").bindForm({
+        validate: function() {
+            Model.clearUploads();
+        },
+        success: function (r) {
+            Model.addNewUploads(r.Results);
+        }
+    });
+
+    var uploader = new qq.FineUploader({
+        element: document.getElementById("uploadtestresults"),
+        allowedExtensions: ['zip', 'txt'],
+        minSizeLimit: 1,
+        text: {
+            uploadButton: 'upload test results'
+        },
+        request: {
+            endpoint: "@hrefUploadFiles",
+            customHeaders : {
+                accept: 'application/json'
+            }
+        },
+        callbacks: {
+            onValidateBatch: function() {
+                Model.clearUploads();
+                this.setParams({ CreateNewTestRuns: $("#chkCreateTestRuns")[0].checked });
+            },
+            onComplete: function (id, fileName, response) {
+                Model.addNewUploads(response.Results);
+            }
+        }
+    });
+
+    function refreshTestRuns() {
+        $.getJSON("/testplans/@Model.Id/testruns", Model.setTestRuns);
+        $.getJSON("/testplans/@Model.Id/testruns/@Model.TestRunId/edit", Model.setLabels);
+    }
+
+    //main
+    refreshTestRuns();
+</script>

@@ -1,0 +1,248 @@
+﻿@{
+    ViewBag.Title = "User Guide";
+}
+<style>
+    .shadow {
+        -moz-box-shadow:    1px 1px 3px 3px #eee;
+        -webkit-box-shadow: 1px 1px 3px 3px #eee;
+        box-shadow:         1px 1px 3px 3px #eee;
+        margin: 10px 0;
+    }
+</style>
+    
+<div style="width: 820px">
+    
+    <p>
+        HTTP Benchmarks Viewer lets you upload your Apache Benchmarks and search, visualize and export the results.
+    </p>
+    
+    <p>
+        Uploading benchmark outputs is easy, upload them as multiple raw text files or bundled together in .zip files.
+    </p>
+
+    <hr/>
+    <h3>Running Apache Benchmark</h3>
+        
+    <h4>Download Apache Bench for Windows</h4>
+    <p>
+        You can download a copy of the <a href="http://httpd.apache.org/docs/2.2/programs/ab.html">Apache Benchmark Utility</a>     
+        for Windows at <a href="https://github.com/ServiceStack/HttpBenchmarks/raw/master/ab.exe"><b>ab.exe</b></a>.
+        It's also included in every installation of Apache under the <code>bin/ab.exe</code> directory, which is available for Windows in the  
+        <a href="http://sourceforge.net/projects/xampp/files/XAMPP%20Windows/">zip package of XAMPP.</a>
+    </p>
+    
+    <h4>Running a benchmark</h4>
+    <p>
+        Here's an example of using the ab utility to run a benchmark against a HTTP URL:
+    </p>
+
+    <pre>ab -k -n 1000 -c 10 "http://localhost:55000/json" > json_1000_10.txt</pre>
+
+    <p>
+        This benchmark uses the HTTP <b>keepalive</b> feature when performing <b>1000</b> requests
+        at <b>10</b> requests at a time against the above url, 
+        saving the results of the benchmark in a file called <b>json_1000_10.txt</b>.
+        More options are available in the 
+        <a href="http://httpd.apache.org/docs/2.2/programs/ab.html">Apache Benchmark docs</a>.     
+    </p>
+        
+    <p>
+        The <b>json_1000_10.txt</b> output from this command can be uploaded to this site for analyzing.
+    </p>
+    
+    <a name="benchmark-structure"></a>
+    <h3>Benchmark Structure</h3>
+    
+    <p>
+        The file names of the benchmarks aren't used, instead the significant fields that categorize your benchmarks are:
+    </p>
+
+    <ul>
+        <li><b>hostname:port</b> - each unique host identifier representing a different server</li>
+        <li><b>/requestpath</b> - the /pathinfo part of the HTTP request represents a different test</li>
+    </ul> 
+    
+    <p>
+        Meaning the results will be displayed grouped by host name and seperated into different tests.
+    </p>    
+    <hr/>
+    
+    <h2>User Guide</h2>
+    
+    <p>
+        This guide will take you through the steps of uploading and analyzing your benchmarks
+    </p>
+
+    <h3>Creating a Test Plan</h3>
+    
+    <p>
+        A test plan which allows you to group a historical series of test runs together, 
+        which you create after logging in: 
+    </p>
+    
+    <p>
+        <img class="shadow" src="/Content/img/create-testplan.png" />
+    </p>
+    
+    <p>
+        The slug is the unique identifier for your benchmarks publicly accessible at <b>/slug</b>. <br/>
+        Once created, test plans will appear under the <b>My Test Plans</b> heading, sorted by most recent.
+    </p>
+    
+    <h2>Editing a test plan</h2>
+    
+    <p>Selecting a test plan will take you to the edit screen where you can manage details about your environment</p>
+
+    <h3>Creating a test run</h3>
+    
+    <p>
+        Benchmarks are attached to individual test runs representing a snapshot when the benchmarks were run. 
+        Repeated results should be added to new test runs so they're progress are properly grouped and tracked.
+    </p>
+    
+    <p>
+        By default a test run is automatically created and labelled with the current date, which will let you start 
+        adding benchmarks straight away.
+    </p>
+    
+    <p>
+        You can also create your own by selecting <b>Create new test run</b> from the drop down:
+    </p>
+    
+    <p>
+        <img class="shadow" src="/Content/img/create-testrun.png" />
+    </p>
+    
+    <p>
+        This will open a modal dialog that will let you provide a custom label for the new test run.
+        Once created it will automatically be selected and you can start attaching benchmarks to it. 
+    </p>
+    
+    <h3>Uploading benchmarks</h3>
+
+    <p>
+        The easiest way to add bechmarks is to upload files from your computer by pressing <b>upload test results</b>.<br/> 
+        You can upload multiple files at once, or if you prefer zip them together and upload them inside <b>.zip</b> files:
+    </p>
+    
+    <p>
+        <img class="shadow" src="/Content/img/upload-results.png" />
+    </p>
+    
+    <p>
+        Each upload will display its own status bar with a greenbar for each file indicating it was successfully uploaded.
+        The contents of all the files that were uploaded will also be displayed in a grid format for inspection.
+    </p>
+    
+    <p>
+        Once benchmarks are added, the links will be enabled and the badge listing the total count of benchmarks will be updated.  
+    </p>
+    
+    <p>
+        <img class="shadow" src="/Content/img/updated-testrun.png" />
+    </p>
+    
+    <h4>Uploading benchmarks as new test runs</h4>
+
+    <p>
+        If you want to upload multiple runs of the <b>same benchmark</b> than you want to check
+        the <b>Create new test run for each .zip</b> checkbox which will create a new test run
+        for each batch uploaded, using the name of the <b>.zip</b> file as the series id, e.g:
+    </p>
+    
+    <p>
+        <img class="shadow" src="/Content/img/upload-as-new-testruns.png" />
+    </p>
+
+    <p>
+        Clicking <b>View Results</b> will take you to the public benchmarks page and let you visualize the results:
+    </p>
+    
+    <p>
+        <img class="shadow" src="/Content/img/summary-bare.png" />
+    </p>
+    
+    <p>
+        <img class="shadow" src="/Content/img/charts-bare.png" />
+    </p>
+    
+    <p>
+        As <a href="#benchmark-structure">noted above</a>, benchmarks are grouped by <b>hostname:port</b>
+        and charted into different tests by <b>/pathinfo</b>. By default the raw labels will be used, but
+        you make them charts more readable by assigning custom labels to use instead which you can do 
+        by going back to the edit screen under the <b>Markup Graphs with Custom Labels</b> section:
+    </p>
+    
+    <p>
+        <img class="shadow" src="/Content/img/custom-labels.png" />
+    </p>
+    
+    <p>
+        It automatically shows all the unique server host names and /pathinfos listed in any of the 
+        benchmarks so you only need to check the <b>edit labels</b> checkbox and fill in the blanks
+        next to each text identifier:
+    </p>
+
+    <p>
+        <img class="shadow" src="/Content/img/edit-custom-labels.png" />
+    </p>
+    
+    <p>
+        Once you've finished adding labels, hitting save will show that your labels properly displayed 
+        in the adjacent table cells:
+    </p>
+
+    <p>
+        <img class="shadow" src="/Content/img/saved-custom-labels.png" />
+    </p>
+    
+    <p>
+        Re-visiting the charts again will use the custom labels for a more readable display:
+    </p>
+
+    <p>
+        <img class="shadow" src="/Content/img/summary-labelled.png" />
+    </p>
+    
+    <p>
+        <img class="shadow" src="/Content/img/charts-labelled.png" />
+    </p>
+    
+    <p>
+        Whilst the graphs give you a nice overview, they only show the Requests Per Second at different
+        concurrency levels. The other metrics in the Apache benchmarks can be inspected by clicking on 
+        <b>view details</b> in the top right. 
+    </p>
+    
+    <p>
+        This will bring you to the search results page that displays all the benchmark results in a gridview:        
+    </p>
+
+    <p>
+        <img class="shadow" src="/Content/img/search-filter.png" />
+    </p>
+    
+    <p>
+        The gridview supports sorting of each column and the results can be further filtered with the filters provided.
+    </p>
+    
+    <p>
+        Each filtered resultset can be exported by clicking on your preferred format of choice in the links on the top right:
+    </p>
+
+    <p>
+        <img class="shadow" src="/Content/img/export-search-filter.png" />
+    </p>
+    
+    <p>
+        Although this literally just adds the format's extension, e.g. <b>.csv</b> to the end of the pathinfo, so urls can easily be hand-crafted itself.
+    </p>
+    
+    <h3>Feature Preview</h3>
+    
+    <p>
+        This brings us to the end of this feature preview, we hope you'll find the service useful and
+        we're aiming to update it with more useful charts soon!
+    </p>
+
+</div>

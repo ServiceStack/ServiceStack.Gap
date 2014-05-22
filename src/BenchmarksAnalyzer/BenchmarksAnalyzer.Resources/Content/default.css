@@ -1,0 +1,65 @@
+body {
+    color: #444;
+}
+#body {
+    padding: 0 20px;
+}
+.error {
+}
+a.disabled,span.disabled,a.disabled:hover {
+    color: #999;
+    cursor: text;
+    text-decoration: none;
+}
+.help-block.error, .note.error, .notes.error {
+    color: #f00;
+}
+input.error {
+    background: #FFD9D9;
+    border: 1px solid #f00;
+}
+input {
+    border: 1px solid #cdcdcd;
+}
+input:hover {
+    border: 1px solid #b9b9b9;
+}
+input:focus {
+    border: 1px solid #4285f4;
+}
+.error-summary {
+    display: none;
+}
+.has-errors .error-summary, .validation .error-summary {
+    display: block;
+}
+
+#modalLogin .modal-title {
+    font-size: 18px;
+}
+#modalLogin .modal-body label {
+    display: block;
+}
+#modalLogin .modal-body div {
+    display: inline-block;
+}
+#modalLogin .modal-body input {
+    width: 260px;
+    padding: 5px;
+    margin: 0 7px 0 0;
+}
+
+.when-auth, .when-anon {
+    display: none;
+}
+a, span[data-click],span[data-trigger] {
+    color: #428bca;
+    cursor: pointer;
+}
+a:hover, span[data-click]:hover,span[data-trigger]:hover {
+    color: #2a6496;
+}
+li.active a, li.active a:hover {
+    color: #444;
+    font-weight: bold;
+}

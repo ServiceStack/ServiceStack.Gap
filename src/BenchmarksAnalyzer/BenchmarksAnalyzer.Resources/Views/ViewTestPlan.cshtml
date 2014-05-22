@@ -1,0 +1,185 @@
+﻿@inherits ViewPage<ViewTestPlanResponse>
+
+@{
+    ViewBag.Title = Model.TestRun.SeriesId + " - " + Model.TestPlan.Name;
+}              
+
+<style>
+    #relative-summary {
+        text-align: center;
+    }
+    #relative-summary table {
+        margin: 0 auto 50px auto;
+        width: auto;
+    }
+    #relative-summary th, td {
+        text-align: center;
+    }
+    #relative-summary tbody th {
+        text-align: right;
+        background: #fafafa;
+    }
+</style>
+
+<a href="@(new SearchTestResults { TestPlanId = Model.TestPlan.Id, TestRunId = Model.TestRun.Id }.ToGetUrl())" style="float: right">view details</a>
+
+<h1>@Model.TestPlan.Name <span style="font-size:28px; color: #999;">- @Model.TestRun.SeriesId</span></h1>
+
+<div id="relative-summary"></div>
+
+<div id="charts"></div>
+
+<script type="text/javascript" src="/Scripts/highcharts.js"></script>
+
+<script type="text/javascript">
+
+    var testplan = @Model.TestPlan.AsRawJson();
+    var results = @Model.Results.AsRawJson();
+    var serverLabels = testplan.ServerLabels || {};
+    var testLabels = testplan.TestLabels || {};
+
+    var pathsMap = {};
+    results.forEach(function(x) {
+        pathsMap[x.RequestPath] = x;
+    });
+
+    var i = 0;
+    var paths = Object.keys(pathsMap);
+    paths.sort();
+
+    var pathHostAvgScores = {}, hosts;
+    paths.forEach(function(path) {
+        var chartId = 'chart-' + i++;
+        $("#charts").append("<div id='" + chartId + "'></div>");
+        
+        var dbHostsMap = renderChart(path, chartId);
+        
+        hosts = hosts || Object.keys(dbHostsMap[Object.keys(dbHostsMap)[0]]);
+        pathHostAvgScores[path] = hosts.map(function(h) {
+            var scores = Object.keys(dbHostsMap).map(function(c) {
+                return dbHostsMap[c][h];
+            });
+            return scores.reduce(function(prev, x) { return prev + x; }) / scores.length;
+        });
+    });
+
+    if (hosts.length > 1) {
+        paths = Object.keys(pathHostAvgScores);
+        var html = [
+            "<table class='table'>",
+            "<thead><tr><th></th>",
+                hosts.map(function(h) { return "<th>" + (serverLabels[h] || h) + "</th>"; }).join(''),
+                "</tr></thead><tbody>",
+                paths.map(function(p) {
+                    var max = Math.max.apply(null, pathHostAvgScores[p]);
+                    return "<tr><th>" + (testLabels[p] || p) + "</th>"
+                        + pathHostAvgScores[p].map(function(score) {
+                            return "<td>"
+                                + (max / score).toFixed(1).replace(".0","") + "x"
+                                + "</td>";
+                        }).join('')
+                       + "</tr>";
+                }).join(''),
+            "</tbody>",
+            "</table>"]
+        .join('');
+        
+        $("#relative-summary").html(html);
+    }
+    
+    function renderChart(path, chartId) {
+        var pathResults = results.filter(function(r) {
+            return r.RequestPath == path;
+        });
+
+        var dbHostsMap = {};
+        var hostIndexMap = {};
+        pathResults.forEach(function(r) {
+            if (!dbHostsMap[r.Concurrency])
+                dbHostsMap[r.Concurrency] = {};
+
+            hostIndexMap[r.Host + ":" + r.Port] = hostIndexMap.length - 1;
+            dbHostsMap[r.Concurrency][r.Host + ":" + r.Port] = r.RequestsPerSec;
+        });
+
+        var hosts = Object.keys(hostIndexMap);
+        var score = function(host) {
+           return Object.keys(dbHostsMap).map(function(c) {
+                return dbHostsMap[c] && dbHostsMap[c][host] || 0;
+            }).reduce(function(x,y) { return Math.max(x,y); });            
+        };
+        
+        hosts.sort(function(x, y) {
+            return score(x) < score(y);
+        });
+
+        var series = [];
+        Object.keys(dbHostsMap).forEach(function(c) {
+            var o = {
+                name: c + ' Concurrency',
+                data: []
+            };
+            hosts.forEach(function(h) {
+                o.data.push(dbHostsMap[c][h]);
+            });
+            series.push(o);
+        });
+
+        var hostNames = hosts.map(function(host) { return serverLabels[host] || host; });
+
+        $('#' + chartId).highcharts({
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: testLabels[path] || (path + ' requests')
+            },
+            xAxis: {
+                categories: hostNames,
+                title: {
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Requests (per second)',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                valueSuffix: ' reqs /s'
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -40,
+                y: 100,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: '#FFFFFF',
+                shadow: true
+            },
+            credits: {
+                enabled: false
+            },
+            series: series
+        });
+
+        return dbHostsMap;
+    }
+
+</script>
+
+

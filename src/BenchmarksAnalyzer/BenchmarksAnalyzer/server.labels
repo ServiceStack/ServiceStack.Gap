@@ -1,0 +1,5 @@
+localhost:55200 PostgreSQL
+localhost:55300 MySql
+localhost:55400 InMemory
+localhost:55100 SQL Server
+localhost:55500 Sqlite File

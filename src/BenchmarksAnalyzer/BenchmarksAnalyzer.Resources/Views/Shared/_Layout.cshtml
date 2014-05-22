@@ -1,0 +1,91 @@
+﻿@using BenchmarksAnalyzer
+@using BenchmarksAnalyzer.ServiceModel
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@(ViewBag.Title ?? "HTTP Benchmarks Analyzer")</title>
+
+    <link href="/Content/bootstrap.css" rel="stylesheet" />
+    <link href="/Content/bootstrap-theme.css" rel="stylesheet" />
+    <link href="/Content/font-awesome.css" rel="stylesheet" />
+    <link href="/Content/bootstrap-social.css" rel="stylesheet" />
+    <link href="/Content/default.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="/Scripts/jquery-2.1.0.js"></script>
+    <script type="text/javascript" src="/Scripts/bootstrap.js"></script>
+    <script type="text/javascript" src="/js/ss-utils.js"></script>
+    
+    <!--[if lt IE 9]><script type="text/javascript" src="/Scripts/es5-shim.js"></script><![endif]-->
+
+    @RenderSection("head")
+</head>
+<body>
+    
+    <div class="modal fade" id="modalLogin">
+        <div class="modal-dialog">
+            <form id="form-login" action="/auth/login">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Login with your account</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="error-summary alert alert-danger"></p>
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input class="form-control" type="text" name="UserName" value=""/>
+                        </div>
+                        <div class="form-group">
+                            <label>Password:</label>
+                            <input class="form-control" type="password" name="Password"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="header">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <h3 style="margin: 0; padding: 10px 20px 0 0">
+                    <a href="/"><span class="glyphicon glyphicon-sort-by-attributes"></span></a>
+                    Benchmarks Analyzer
+                </h3>
+            </div>
+
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <a href="/about">user guide</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+    </nav>
+    </div>
+    
+    <div id="body">
+        @RenderBody()
+    </div>
+
+    <script type="text/javascript">
+        window.App = {};
+        $("a").setActiveLinks();
+        $(document).bindHandlers();
+    </script>
+    
+    <div id="footer">
+        <a href="https://servicestack.net" title="Powered by ServiceStack" style="color: #000; font: bold 14px Helvetica; text-decoration: none; position: fixed; right: 10px; bottom: 5px;">
+            <img src="/Content/img/logo.png" /> ServiceStack
+        </a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+﻿@inherits ViewPage<SearchTestResultsResponse>
+@if (RenderErrorIfAny()) { return; }
+
+<div style="float: right; text-align: right">
+    <div id="formats" style="margin: 0 0 20px 0">
+        download in: 
+        <span>
+            <a data-click="viewFormat:.json">json</a>
+            <a data-click="viewFormat:.csv">csv</a>
+            <a data-click="viewFormat:.xml">xml</a>
+            <a data-click="viewFormat:.jsv">jsv</a>
+        </span>
+
+        @if (IsAuthenticated)
+        {
+            <a style="margin: 0 0 0 15px" href="@(new EditTestPlan { Id = Model.TestPlanId, TestRunId = Model.TestRunId }.ToGetUrl())" class="btn btn-success">Edit Plan</a>    
+        }
+    </div>
+</div>
+
+<form style="margin: 0 0 20px 0">
+    <div class="form-inline">
+        <div class="form-group">
+            <h3 style="margin: 0 15px 0 0; line-height: 40px;">Filter Results</h3>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" name="host" value="@Model.Host" placeholder="hostname"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" style="width:70px;" type="text" name="port" value="@Model.Port" placeholder="port"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" name="requestPath" value="@Model.RequestPath" placeholder="/pathinfo"/>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary">Search</button>
+        </div>
+
+        <div class="form-group">
+            <span style="color:#999; margin: 0 0 0 10px">
+                showing @Model.Take.GetValueOrDefault(Model.Total) results:
+            </span>
+        </div>
+    </div>
+</form>
+
+<div class="clearfix"></div>
+
+<script type="text/javascript">
+
+    $(document).bindHandlers({
+        viewFormat: function (ext) {
+            location.href = location.href.indexOf("?") >= 0
+                ? location.href.replace("?", ext + "?")
+                : location.href + ext;
+        }
+    });
+
+</script>
+
+@Html.Partial("AutoGrid", Model.Results)
