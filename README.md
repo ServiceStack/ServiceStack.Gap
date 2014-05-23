@@ -188,7 +188,7 @@ static void Main(string[] args)
 }
 ```
 
-## WinForms App with Chromium Embedded Framework
+## WinForms with Chromium Embedded Framework
 
 Whilst running a Self-Hosting app that launches the System browser provides a working solution, we can provide an 
 even better integrated solution by instead viewing the application inside a Native Desktop App which is essentially
@@ -210,16 +210,16 @@ To be able to use them in .NET we need .NET bindings, which there are currently 
  - [CefSharp](https://github.com/cefsharp/CefSharp) 
  - [CefGlue](http://xilium.bitbucket.org/cefglue/)
 
- We've decided on CefSharp for the WinForms App since it includes the CEF builds it's built against and requires
- very little boilerplate to wrap. 
+We've decided on CefSharp for the WinForms App since it includes the CEF builds it's built against and requires
+very little boilerplate to wrap. 
 
- #### Creating a WinForms CefSharp-enabled App
+#### Creating a WinForms CefSharp-enabled App
 
 After Creating a New **Windows Forms Application** from VS.NET's Add New Project template:
 
-  1. Reference all the `CefSharp.*` .NET dlls in [/lib](https://github.com/ServiceStack/ServiceStack.Gap/tree/master/lib)
-  2. Open `Build > Configuration Manager...` and change the **Active Solution Plaform** to `x86`
-  3. Build the solution then copy all the native cef files in [/lib/cef](https://github.com/ServiceStack/ServiceStack.Gap/tree/master/lib/cef) into the `/bin/x86/Release` directory
+ 1. Reference all the `CefSharp.*` .NET dlls in [/lib](https://github.com/ServiceStack/ServiceStack.Gap/tree/master/lib)
+ 2. Open `Build > Configuration Manager...` and change the **Active Solution Plaform** to `x86`
+ 3. Build the solution then copy all the native cef files in [/lib/cef](https://github.com/ServiceStack/ServiceStack.Gap/tree/master/lib/cef) into the `/bin/x86/Release` directory
 
 > Note: The native CEF files will also need to be deployed with your app
 
@@ -244,6 +244,8 @@ public partial class FormMain : Form
     }
 }
 ```
+
+#### Initializing CEF and ServiceStack
 
 The only thing that needs to be done before then is to call `Cef.Initialize()` with optional settings you can use
 to modify its behavior which you can do in `Program.Main()`:
