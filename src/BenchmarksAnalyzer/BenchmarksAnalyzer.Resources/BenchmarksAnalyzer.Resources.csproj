@@ -37,6 +37,8 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -46,6 +48,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ServiceStack">
@@ -72,15 +75,14 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.Razor.4.0.21\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\ServiceStack.Razor.4.0.21\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseTypeMarker.cs" />
@@ -174,7 +176,7 @@
       <Name>BenchmarksAnalyzer.ServiceInterface</Name>
     </ProjectReference>
     <ProjectReference Include="..\BenchmarksAnalyzer.ServiceModel\BenchmarksAnalyzer.ServiceModel.csproj">
-      <Project>{75ff27bd-c942-4c57-b2b9-606becf2dd81}</Project>
+      <Project>{75FF27BD-C942-4C57-B2B9-606BECF2DD81}</Project>
       <Name>BenchmarksAnalyzer.ServiceModel</Name>
     </ProjectReference>
   </ItemGroup>

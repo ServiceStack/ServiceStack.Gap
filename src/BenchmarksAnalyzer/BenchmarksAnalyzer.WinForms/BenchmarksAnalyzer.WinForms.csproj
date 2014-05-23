@@ -40,6 +40,8 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -50,25 +52,14 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CefSharp, Version=1.25.4.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\CefSharp.dll</HintPath>
-    </Reference>
     <Reference Include="CefSharp.BrowserSubprocess">
       <HintPath>..\..\..\lib\CefSharp.BrowserSubprocess.exe</HintPath>
-    </Reference>
-    <Reference Include="CefSharp.Core, Version=31.0.0.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\CefSharp.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="CefSharp.WinForms, Version=1.25.4.29918, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\CefSharp.WinForms.dll</HintPath>
     </Reference>
     <Reference Include="Ionic.Zip">
       <HintPath>..\packages\DotNetZip.1.9.2\lib\net20\Ionic.Zip.dll</HintPath>
@@ -103,10 +94,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.Razor.4.0.21\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -115,6 +102,18 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="CefSharp">
+      <HintPath>..\..\..\lib\CefSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="CefSharp.Core">
+      <HintPath>..\..\..\lib\CefSharp.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CefSharp.WinForms">
+      <HintPath>..\..\..\lib\CefSharp.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\ServiceStack.Razor.4.0.21\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppHost.cs" />
@@ -163,16 +162,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BenchmarksAnalyzer.Resources\BenchmarksAnalyzer.Resources.csproj">
-      <Project>{d6dca6f9-d715-4ef3-aba7-75075a0175ba}</Project>
-      <Name>BenchmarksAnalyzer.Resources</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BenchmarksAnalyzer.ServiceInterface\BenchmarksAnalyzer.ServiceInterface.csproj">
-      <Project>{6ab68164-416a-4c8d-b379-2eec9f6ceb32}</Project>
+      <Project>{6AB68164-416A-4C8D-B379-2EEC9F6CEB32}</Project>
       <Name>BenchmarksAnalyzer.ServiceInterface</Name>
     </ProjectReference>
     <ProjectReference Include="..\BenchmarksAnalyzer.ServiceModel\BenchmarksAnalyzer.ServiceModel.csproj">
-      <Project>{75ff27bd-c942-4c57-b2b9-606becf2dd81}</Project>
+      <Project>{75FF27BD-C942-4C57-B2B9-606BECF2DD81}</Project>
       <Name>BenchmarksAnalyzer.ServiceModel</Name>
     </ProjectReference>
   </ItemGroup>

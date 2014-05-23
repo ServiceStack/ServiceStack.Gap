@@ -37,6 +37,8 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -46,6 +48,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ionic.Zip">
@@ -86,12 +89,6 @@
     <Compile Include="WebServices.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BenchmarksAnalyzer.ServiceModel\BenchmarksAnalyzer.ServiceModel.csproj">
-      <Project>{75FF27BD-C942-4C57-B2B9-606BECF2DD81}</Project>
-      <Name>BenchmarksAnalyzer.ServiceModel</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -102,4 +99,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\BenchmarksAnalyzer.ServiceModel\BenchmarksAnalyzer.ServiceModel.csproj">
+      <Project>{75FF27BD-C942-4C57-B2B9-606BECF2DD81}</Project>
+      <Name>BenchmarksAnalyzer.ServiceModel</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
