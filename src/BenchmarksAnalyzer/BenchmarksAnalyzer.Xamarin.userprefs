@@ -1,26 +1,15 @@
-﻿<Properties MonoDevelop.MonoMac.LastXamMacNagTime="5/23/2014 4:13:17 AM">
+﻿<Properties MonoDevelop.MonoMac.LastXamMacNagTime="5/23/2014 1:06:58 PM">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="BenchmarksAnalyzer.Mac/MainWindow.cs">
     <Files>
-      <File FileName="BenchmarksAnalyzer.Mac/Main.cs" Line="9" Column="34" />
-      <File FileName="BenchmarksAnalyzer.Mac/AppHost.cs" Line="65" Column="13" />
-      <File FileName="BenchmarksAnalyzer.Mac/packages.config" Line="12" Column="12" />
+      <File FileName="BenchmarksAnalyzer.Mac/Main.cs" Line="1" Column="1" />
+      <File FileName="BenchmarksAnalyzer.Mac/AppHost.cs" Line="1" Column="1" />
+      <File FileName="BenchmarksAnalyzer.Mac/packages.config" Line="1" Column="1" />
       <File FileName="BenchmarksAnalyzer.Mac/MainWindowController.cs" Line="1" Column="1" />
       <File FileName="BenchmarksAnalyzer.Mac/MainWindow.cs" Line="9" Column="62" />
-      <File FileName="BenchmarksAnalyzer.Mac/test.labels" Line="8" Column="1" />
+      <File FileName="BenchmarksAnalyzer.Mac/test.labels" Line="1" Column="1" />
       <File FileName="BenchmarksAnalyzer.Mac/Info.plist" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="BenchmarksAnalyzer.Mac" expanded="True">
-            <Node name="MainWindow.cs" selected="True" />
-          </Node>
-          <Node name="BenchmarksAnalyzer.ServiceInterface" expanded="True" />
-          <Node name="BenchmarksAnalyzer.ServiceModel" expanded="True" />
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
