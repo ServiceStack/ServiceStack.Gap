@@ -22,13 +22,13 @@ To illustrate this we'll encapsulate the [Http Benchmarks](https://github.com/Se
 
 This app is available for download in a number of different flavours:
 
-> **[BenchmarksAnalyzer.zip](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.zip)** - A single .exe that opens the BenchmarksAnalyzer app in the users preferred browser
+> **[BenchmarksAnalyzer.zip](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.zip)** - Single .exe that opens the BenchmarksAnalyzer app in the users browser
 [![Partial Console Screenshot](https://raw.githubusercontent.com/ServiceStack/Assets/master/img/gap/partial-exe.png)](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.zip)
 
-> **[BenchmarksAnalyzer.Mac.zip](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.Mac.zip)** - A self-hosted app running inside a Native OSX Cocoa App Web Browser widget
+> **[BenchmarksAnalyzer.Mac.zip](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.Mac.zip)** - Self-hosted app running inside a OSX Cocoa App Web Browser
 [![Partial OSX Screenshot](https://raw.githubusercontent.com/ServiceStack/Assets/master/img/gap/partial-osx.png)](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.Mac.zip)
 
-> **[BenchmarksAnalyzer.Windows.zip](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.Windows.zip)** - A self-hosted app running inside a Native WinForms app inside a Chromium Embedded Framework widget
+> **[BenchmarksAnalyzer.Windows.zip](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.Windows.zip)** - Self-hosted app running inside a Native WinForms app inside [CEF](https://code.google.com/p/chromiumembedded/)
 [![Partial Windows Screenshot](https://raw.githubusercontent.com/ServiceStack/Assets/master/img/gap/partial-win.png)](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.Windows.zip)
 
 ## About Benchmarks Analyzer
