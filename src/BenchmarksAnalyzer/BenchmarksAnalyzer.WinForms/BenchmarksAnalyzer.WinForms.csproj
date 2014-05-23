@@ -162,6 +162,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BenchmarksAnalyzer.Resources\BenchmarksAnalyzer.Resources.csproj">
+      <Project>{D6DCA6F9-D715-4EF3-ABA7-75075A0175BA}</Project>
+      <Name>BenchmarksAnalyzer.Resources</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BenchmarksAnalyzer.ServiceInterface\BenchmarksAnalyzer.ServiceInterface.csproj">
       <Project>{6AB68164-416A-4C8D-B379-2EEC9F6CEB32}</Project>
       <Name>BenchmarksAnalyzer.ServiceInterface</Name>

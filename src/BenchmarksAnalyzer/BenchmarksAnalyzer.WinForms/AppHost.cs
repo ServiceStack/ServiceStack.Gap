@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using BenchmarksAnalyzer.Resources;
 using BenchmarksAnalyzer.ServiceInterface;
 using BenchmarksAnalyzer.ServiceModel;
 using BenchmarksAnalyzer.ServiceModel.Types;
@@ -33,12 +34,12 @@ namespace BenchmarksAnalyzer
             Plugins.Add(new PostmanFeature());
             Plugins.Add(new RazorFormat
             {
-                LoadFromAssemblies = { typeof(Resources.BaseTypeMarker).Assembly },
+                LoadFromAssemblies = { typeof(BaseTypeMarker).Assembly },
             });
 
             SetConfig(new HostConfig {
                 DebugMode = true,
-                EmbeddedResourceBaseTypes = { GetType(), typeof(Resources.BaseTypeMarker) },
+                EmbeddedResourceBaseTypes = { GetType(), typeof(BaseTypeMarker) },
             });
 
             container.Register<IDbConnectionFactory>(c =>

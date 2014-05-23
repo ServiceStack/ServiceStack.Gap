@@ -51,6 +51,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Data.Sqlite">
       <HintPath>..\packages\ServiceStack.OrmLite.Sqlite.Mono.4.0.21\lib\net40\Mono.Data.Sqlite.dll</HintPath>
@@ -131,6 +134,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="sqlite3.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="favicon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
