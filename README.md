@@ -34,25 +34,25 @@ This app is available for download in a number of different flavours:
 
 [![Partial Windows Screenshot](https://raw.githubusercontent.com/ServiceStack/Assets/master/img/gap/partial-win.png)](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.Windows.zip)
 
-## About Benchmarks Analyzer
+### About Benchmarks Analyzer
 
 To use just copy `BenchmarksAnalyzer.exe` in the same directory where your Apache Benchmark output files 
 are kept and when started it will automatically import all Benchmark outputs with a `.txt` extension
 (or grouped inside `.zip` batches) and open your preferred web browser to view the results.
 
-### Viewing the bundled Example
+#### Viewing the bundled Example
 
 `BenchmarksAnalyzer.zip` also comes with example data so you can run it to see an example of it in action:
 
-	\Database Performance in ASP.NET.zip - Example dataset containing Benchmark outputs in a single .zip
-	\server.labels - Holds Custom Labels to markup different servers in charts
-	\test.labels - Holds Custom Labels to markup different tests in charts
+ - **Database Performance in ASP.NET.zip** - Example dataset containing Benchmark outputs in a single .zip
+ - **server.labels** - Holds Custom Labels to markup different servers in charts
+ - **test.labels** - Holds Custom Labels to markup different tests in charts
 
 To view the built-in example just extract the .zip file and double-click on `BenchmarksAnalyzer.exe` 
 to run the Program to view the above example dataset with the custom configuration.
 
 See the included [README.txt](https://github.com/ServiceStack/ServiceStack.Gap/blob/master/src/BenchmarksAnalyzer/build/README.txt)
-for more info on Benchmark Analyzer features and how you can markup the charts with custom labels.
+for more Benchmark Analyzer features and how to markup the charts with custom labels.
 
 ## Creating Benchmarks Analyzer
 
@@ -101,6 +101,8 @@ As we want to make this app as easy as possible to use, we've removed the requir
 suit a "one-shot stateless execution" where it doesn't save any state in the Sqlite database between runs, instead
 it just automatically imports all the Apache Benchmark Outputs in `.txt` or `.zip` files in the directory where it's run from.
 
+### Uploading Files to a HTTP Service In Memory
+
 Luckily this is simple to do where we're able to re-use the existing HTTP Upload service that processses HTTP File uploads
 of multiple `.txt` and `.zip` files, where instead of passing a HTTP Request with the uploads we inject it with a 
 `BasicRequest` context that contains File metadata sourced from the `FileSystemVirtualPathProvider`, e.g:
@@ -136,7 +138,6 @@ using (var admin = Resolve<AdminServices>())
 ```
 
 After running the import we can determine which page to open based on whether any files were imported or not.
-
 If some results were imported then we open up immediately to view the results, otherwise we open the Admin UI
 so users can manually upload the Apache Benchmark outputs themselves, e.g:
 
@@ -155,7 +156,7 @@ public string GetStartUrl()
 }
 ```
 
-### Console Application
+## Self-Hosting Console App
 
 The Console Application works like any other [Self Host](https://github.com/ServiceStack/ServiceStack/wiki/Self-hosting) app,
 the only difference is because it needs to also run as a single ILMerged .exe we need to call 
@@ -186,3 +187,81 @@ static void Main(string[] args)
     Thread.Sleep(Timeout.Infinite);
 }
 ```
+
+## WinForms App with Chromium Embedded Framework
+
+Whilst running a Self-Hosting app that launches the System browser provides a working solution, we can provide an 
+even better integrated solution by instead viewing the application inside a Native Desktop App which is essentially
+just a lightweight shell containing a full-width browser widget. 
+
+Unfortunately the WebBrowser widget available in .NET WinForms and WPF applications is an old underperforming version
+of IE which doesn't yield a great experience for the types of Single Page Apps that you'd want to host within a 
+Native Desktop App.
+
+### The Chromium Embedded Framework
+
+The best chance to get a great Desktop Web experience on Windows is to use the 
+[Chromium Embedded Framework](https://code.google.com/p/chromiumembedded/) builds for Windows hosted at 
+[cefbuilds.com](http://cefbuilds.com). These builds provide native dlls for an embedded version of Chromium 
+for Windows. 
+
+To be able to use them in .NET we need .NET bindings, which there are currently 2 Open Source .NET projects to do this:
+
+ - [CefSharp](https://github.com/cefsharp/CefSharp) 
+ - [CefGlue](http://xilium.bitbucket.org/cefglue/)
+
+ We've decided on CefSharp for the WinForms App since it includes the CEF builds it's built against and requires
+ very little boilerplate to wrap. 
+
+ #### Creating a WinForms CefSharp-enabled App
+
+After Creating a New **Windows Forms Application** from VS.NET's Add New Project template:
+
+  1. Reference all the `CefSharp.*` .NET dlls in [/lib](https://github.com/ServiceStack/ServiceStack.Gap/tree/master/lib)
+  2. Open `Build > Configuration Manager...` and change the **Active Solution Plaform** to `x86`
+  3. Build the solution then copy all the native cef files in [/lib/cef](https://github.com/ServiceStack/ServiceStack.Gap/tree/master/lib/cef) into the `/bin/x86/Release` directory
+
+> Note: The native CEF files will also need to be deployed with your app
+
+From there, making use of the CEF WebBrowser widget is easy, just add a single `Panel` from the Toolbox to your 
+main **Form** (docked at full-width) using the designer. Then in the Forms constructor you can add a new instance
+of `WebView` to the panel you just created, e.g:
+
+```csharp
+public partial class FormMain : Form
+{
+    private readonly WebView webView;
+
+    public FormMain(string loadUrl)
+    {
+        InitializeComponent();
+
+        WindowState = FormWindowState.Maximized;
+        webView = new WebView(loadUrl) {
+            Dock = DockStyle.Fill,
+        };
+        this.panelMain.Controls.Add(webView);
+    }
+}
+```
+
+The only thing that needs to be done before then is to call `Cef.Initialize()` with optional settings you can use
+to modify its behavior which you can do in `Program.Main()`:
+
+```csharp
+[STAThread]
+static void Main()
+{
+    Cef.Initialize(new CefSettings());
+
+    Application.EnableVisualStyles();
+    Application.SetCompatibleTextRenderingDefault(false);
+
+    var appHost = new AppHost("http://localhost:1337/")
+        .Start();
+
+    Application.Run(new FormMain(appHost.GetStartUrl()));
+}
+```
+
+Other than that all we have to do is start ServiceStack's AppHost and pass the url we want to the form to launch with.
