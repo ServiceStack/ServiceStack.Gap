@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{78280D2E
 		build\init-winforms.bat = build\init-winforms.bat
 		build\package-benchmarksanalyzer-winforms.bat = build\package-benchmarksanalyzer-winforms.bat
 		build\package-benchmarksanalyzer.bat = build\package-benchmarksanalyzer.bat
+		..\..\README.md = ..\..\README.md
 		build\README.txt = build\README.txt
 	EndProjectSection
 EndProject

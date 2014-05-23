@@ -1,0 +1,21 @@
+RMDIR ..\BenchmarksAnalyzer.Resources\Content /s /q
+MD ..\BenchmarksAnalyzer.Resources\Content
+XCOPY /E ..\..\..\..\HttpBenchmarks\src\BenchmarksAnalyzer\Content ..\BenchmarksAnalyzer.Resources\Content
+RMDIR ..\BenchmarksAnalyzer.Resources\Scripts /s /q
+MD ..\BenchmarksAnalyzer.Resources\Scripts
+XCOPY /E ..\..\..\..\HttpBenchmarks\src\BenchmarksAnalyzer\Scripts ..\BenchmarksAnalyzer.Resources\Scripts 
+RMDIR ..\BenchmarksAnalyzer.Resources\Views /s /q
+MD ..\BenchmarksAnalyzer.Resources\Views
+XCOPY /E ..\..\..\..\HttpBenchmarks\src\BenchmarksAnalyzer\Views ..\BenchmarksAnalyzer.Resources\Views 
+RMDIR ..\BenchmarksAnalyzer.Resources\fonts /s /q
+MD ..\BenchmarksAnalyzer.Resources\fonts
+XCOPY /E ..\..\..\..\HttpBenchmarks\src\BenchmarksAnalyzer\fonts ..\BenchmarksAnalyzer.Resources\fonts 
+
+COPY ..\..\..\..\HttpBenchmarks\src\BenchmarksAnalyzer\HtmlExtensions.cs ..\BenchmarksAnalyzer.Resources\
+
+COPY ..\..\..\..\HttpBenchmarks\src\BenchmarksAnalyzer.ServiceInterface\*.cs ..\BenchmarksAnalyzer.ServiceInterface\
+
+COPY ..\..\..\..\HttpBenchmarks\src\BenchmarksAnalyzer.ServiceModel\*.cs ..\BenchmarksAnalyzer.ServiceModel\
+COPY ..\..\..\..\HttpBenchmarks\src\BenchmarksAnalyzer.ServiceModel\Types\*.cs ..\BenchmarksAnalyzer.ServiceModel\Types
+ 
+
