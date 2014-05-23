@@ -23,12 +23,15 @@ To illustrate this we'll encapsulate the [Http Benchmarks](https://github.com/Se
 This app is available for download in a number of different flavours:
 
 > **[BenchmarksAnalyzer.zip](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.zip)** - Single .exe that opens the BenchmarksAnalyzer app in the users browser
+
 [![Partial Console Screenshot](https://raw.githubusercontent.com/ServiceStack/Assets/master/img/gap/partial-exe.png)](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.zip)
 
 > **[BenchmarksAnalyzer.Mac.zip](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.Mac.zip)** - Self-hosted app running inside a OSX Cocoa App Web Browser
+
 [![Partial OSX Screenshot](https://raw.githubusercontent.com/ServiceStack/Assets/master/img/gap/partial-osx.png)](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.Mac.zip)
 
 > **[BenchmarksAnalyzer.Windows.zip](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.Windows.zip)** - Self-hosted app running inside a Native WinForms app inside [CEF](https://code.google.com/p/chromiumembedded/)
+
 [![Partial Windows Screenshot](https://raw.githubusercontent.com/ServiceStack/Assets/master/img/gap/partial-win.png)](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.Windows.zip)
 
 ## About Benchmarks Analyzer
@@ -48,40 +51,8 @@ are kept and when started it will automatically import all Benchmark outputs wit
 To view the built-in example just extract the .zip file and double-click on `BenchmarksAnalyzer.exe` 
 to run the Program to view the above example dataset with the custom configuration.
 
-### Grouping Benchmarks
-
-If you want to group multiple benchmarks outputs together, save them in separate .zip files so they're 
-grouped into separate test runs labelled with the **name** of the .zip file, next time the Program is restarted.
-
-### Marking Up Benchmark Charts
-
-To make the benchmarks easier to read you can replace the Server and Test labels inferred from the target 
-url with your own custom labels. The easiest way to do this is to go to the Admin UI redirected from the
-home page (http://localhost:1337/) then click the **edit labels** checkbox which will allow you to edit
-the labels for the server and tests used. 
-
-We can markup the labels for the example urls tested above, i.e:
-
-- http://localhost:1337/testplans.json
-- http://localhost:1337/testplans.xml
-
-#### Server Labels
-
-	localhost:1337 ServiceStack SelfHost
-
-Using the Format: {hostname}:{port} {Label}
-
-#### Test Labels
-
-	/testplans.json JSON Response
-	/testplans.xml XML Response
-
-Using the Format: {/pathinfo} {Label}
-
-Once saved you can view the graphs again to see charts now display the custom labels above.
-
-Saving also writes out the above info in `server.labels` and `test.labels` text files which can be 
-hand-edited outside the Admin UI and will be available next time the Program is restarted.
+See the included [README.txt](https://github.com/ServiceStack/ServiceStack.Gap/blob/master/src/BenchmarksAnalyzer/build/README.txt)
+for more info on Benchmark Analyzer features and how you can markup the charts with custom labels.
 
 ## Creating Benchmarks Analyzer
 
