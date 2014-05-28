@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using BenchmarksAnalyzer.WinForms;
 using CefSharp;
-using ServiceStack.Text;
 
 namespace BenchmarksAnalyzer
 {

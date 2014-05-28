@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -25,6 +26,34 @@ namespace BenchmarksAnalyzer
             : base("HTTP Benchmarks Analyzer", typeof(WebServices).Assembly)
         {
             BaseUrl = baseUrl;
+
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length > 1)
+            {
+                var exe = args[0];
+                var arg = args[1];
+
+                var help = new HashSet<string> { "-h", "--help", "/h", "/help" };
+                if (help.Contains(arg))
+                {
+                    "Usage: {0}                   # Imports files in current dir".Print(exe);
+                    "Usage: {0} /path/to/dir      # Imports files in target dir".Print(exe);
+                    "Usage: {0} /path/to/file.zip # Imports files in target .zip".Print(exe);
+                }
+                else if (File.Exists(arg))
+                {
+                    BaseDir = Path.GetDirectoryName(arg);
+                    UploadFile = Path.GetFileName(arg);
+                }
+                else if (Directory.Exists(arg))
+                {
+                    BaseDir = arg;
+                }
+                else
+                {
+                    "WARN: {0} is not a valid File or Directory path".Print(arg);
+                }
+            }
         }
 
         public override void Configure(Container container)
@@ -37,7 +66,8 @@ namespace BenchmarksAnalyzer
                 LoadFromAssemblies = { typeof(BaseTypeMarker).Assembly },
             });
 
-            SetConfig(new HostConfig {
+            SetConfig(new HostConfig
+            {
                 DebugMode = true,
                 EmbeddedResourceBaseTypes = { GetType(), typeof(BaseTypeMarker) },
             });
@@ -50,18 +80,21 @@ namespace BenchmarksAnalyzer
 
         private void ImportData()
         {
-            var appSettings = File.Exists("~/app.settings".MapAbsolutePath())
-                ? new TextFileSettings("~/app.settings".MapAbsolutePath())
+            var dir = new FileSystemVirtualPathProvider(this, BaseDir ?? Config.WebHostPhysicalPath);
+
+            var fileSettings = dir.GetFile("app.settings");
+            var appSettings = fileSettings != null
+                ? new DictionarySettings(fileSettings.ReadAllText().ParseKeyValueText(delimiter: " "))
                 : new DictionarySettings();
 
-            var serverLabelsPath = "~/server.labels".MapAbsolutePath();
-            var serverLabels = File.Exists(serverLabelsPath)
-                ? serverLabelsPath.ReadAllText().ParseKeyValueText(delimiter: " ")
+            var fileServerLabels = dir.GetFile("server.labels");
+            var serverLabels = fileServerLabels != null
+                ? fileServerLabels.ReadAllText().ParseKeyValueText(delimiter: " ")
                 : null;
 
-            var testLabelsPath = "~/test.labels".MapAbsolutePath();
-            var testLabels = File.Exists(testLabelsPath)
-                ? testLabelsPath.ReadAllText().ParseKeyValueText(delimiter: " ")
+            var fileTestLabels = dir.GetFile("test.labels");
+            var testLabels = fileTestLabels != null
+                ? fileTestLabels.ReadAllText().ParseKeyValueText(delimiter: " ")
                 : null;
 
             using (var admin = Resolve<AdminServices>())
@@ -72,7 +105,8 @@ namespace BenchmarksAnalyzer
                 db.DropAndCreateTable<TestResult>();
 
                 const int planId = 1;
-                admin.CreateTestPlan(new TestPlan {
+                admin.CreateTestPlan(new TestPlan
+                {
                     Id = planId,
                     Name = appSettings.Get("TestPlanName", "Benchmarks"),
                     ServerLabels = serverLabels,
@@ -81,13 +115,16 @@ namespace BenchmarksAnalyzer
 
                 var testRun = admin.CreateTestRun(planId);
 
-                var dir = new FileSystemVirtualPathProvider(this, Config.WebHostPhysicalPath);
-                var files = dir.GetAllMatchingFiles("*.txt")
-                    .Concat(dir.GetAllMatchingFiles("*.zip"));
+
+                var files = UploadFile != null
+                    ? dir.GetAllMatchingFiles(UploadFile)
+                    : dir.GetAllMatchingFiles("*.txt")
+                        .Concat(dir.GetAllMatchingFiles("*.zip"));
 
                 admin.Request = new BasicRequest
                 {
-                    Files = files.Map(x => new HttpFile {
+                    Files = files.Map(x => new HttpFile
+                    {
                         ContentLength = x.Length,
                         ContentType = MimeTypes.GetMimeType(x.Name),
                         FileName = x.Name,
@@ -108,6 +145,8 @@ namespace BenchmarksAnalyzer
         }
 
         public string BaseUrl { get; set; }
+        public string BaseDir { get; set; }
+        public string UploadFile { get; set; }
 
         public AppHost Start()
         {
@@ -125,7 +164,7 @@ namespace BenchmarksAnalyzer
                 var testPlan = testResult != null ? db.SingleById<TestPlan>(testResult.TestPlanId) : null;
 
                 return testPlan != null
-                    ? BaseUrl.CombineWith("{0}?id={1}".Fmt(testPlan.Slug, testResult.TestRunId)) 
+                    ? BaseUrl.CombineWith("{0}?id={1}".Fmt(testPlan.Slug, testResult.TestRunId))
                     : BaseUrl;
             }
         }
@@ -150,6 +189,6 @@ namespace BenchmarksAnalyzer
             var filePath = Path.Combine(dirPath, "sqlite3.dll");
 
             File.WriteAllBytes(filePath, dllBytes);
-        }        
+        }
     }
 }
