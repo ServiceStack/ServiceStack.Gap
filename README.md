@@ -61,12 +61,14 @@ to run the Program to view the above example dataset with the custom configurati
 See the included [README.txt](https://github.com/ServiceStack/ServiceStack.Gap/blob/master/src/BenchmarksAnalyzer/build/README.txt)
 for more Benchmark Analyzer features and how to markup the charts with custom labels.
 
-## Creating Benchmarks Analyzer
+## Creating an embedded ServiceStack App
 
 To create the portable version of Benchmarks Analyzer we simply 
 [copied the resources from HttpBenchmarks](https://github.com/ServiceStack/ServiceStack.Gap/blob/master/src/BenchmarksAnalyzer/build/init-copy-resources.done) project 
 into a new [BenchmarksAnalyzer.Resources](https://github.com/ServiceStack/ServiceStack.Gap/tree/master/src/BenchmarksAnalyzer/BenchmarksAnalyzer.Resources) 
 project that contains all the websites html/cshtml/js/css/img/etc assets.
+
+### Install ServiceStack.Gap package
 
 We can then compile all the Razor Views and embed all the resouces inside the single `BenchmarksAnalyzer.Resources.dll` 
 by adding the ServiceStack.Gap NuGet package:
