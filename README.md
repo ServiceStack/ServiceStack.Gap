@@ -18,9 +18,22 @@ Combined together this allows you to encapsulate your ServiceStack application i
 
 To illustrate this we'll encapsulate the [Http Benchmarks](https://github.com/ServiceStack/HttpBenchmarks) project into a portable embedded Native Desktop app that can be run locally.
 
-## Download Benchmarks Analyzer
+## Benchmarks Analyzer
 
-This app is available for download in a number of different flavours:
+`BenchmarksAnalyzer.exe` lets you quickly visualize Apache benchmark outputs stored in plain `.txt` files or groups of benchmark outputs stored within `.zip` batches.
+
+### Usage
+
+By default `BenchmarksAnalyzer.exe` will scan the directory where it's run from, it also supports being called with the path to `.txt` or `.zip` files to view or even a directory where output files are located. Given this there are a few popular ways to use Benchmarks Analyzer:
+
+ - Drop `BenchmarksAnalyzer.exe` into a directory of benchmark outputs before running it
+ - Drop a `.zip` or folder onto the `BenchmarksAnalyzer.exe` to view those results
+
+> Note: It can also be specified as a command-line argument, e.g: "BenchmarksAnalyzer.exe path\to\outputs"
+
+### Download
+
+The Benchmarks Analyzer app is available for download in a number of different flavors below:
 
 > **[BenchmarksAnalyzer.zip](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.zip)** - Single .exe that opens the BenchmarksAnalyzer app in the users browser
 
@@ -33,12 +46,6 @@ This app is available for download in a number of different flavours:
 > **[BenchmarksAnalyzer.Windows.zip](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.Windows.zip)** - Self-hosted app running inside a Native WinForms app inside [CEF](https://code.google.com/p/chromiumembedded/)
 
 [![Partial Windows Screenshot](https://raw.githubusercontent.com/ServiceStack/Assets/master/img/gap/partial-win.png)](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/BenchmarksAnalyzer.Windows.zip)
-
-### About Benchmarks Analyzer
-
-To use just copy `BenchmarksAnalyzer.exe` in the same directory where your Apache Benchmark output files 
-are kept and when started it will automatically import all Benchmark outputs with a `.txt` extension
-(or grouped inside `.zip` batches) and open your preferred web browser to view the results.
 
 #### Viewing the bundled Example
 
@@ -267,3 +274,83 @@ static void Main()
 ```
 
 Other than that all we have to do is start ServiceStack's AppHost and pass the url we want to the form to launch with.
+
+## Mac OSX Cocoa App with Xmarain.Mac
+
+[Xamarin.Mac](http://developer.xamarin.com/guides/mac/getting_started/hello,_mac/) provides managed .NET bindings to access OSX's underlying Obj-C/C API's letting you create full-featured native apps using C#.  
+
+### 1. Create Mac Project
+
+We can use [Xamarin Studio](http://xamarin.com/studio) to create Mac apps with C#, by Creating a **Xamarin.Mac Project** from the **New Solution** dialog: 
+
+![Create Mac Project](https://github.com/ServiceStack/Assets/raw/master/img/gap/benchmarksanalyzer.mac-create-mac-project.png)
+
+### 2. Design the App's MainWindow using XCode's Interface Builder
+
+Xamarin Studio includes integration with XCode which lets you design your Application's UI using Interface Builder by double-clicking on any **.xib** (Interface Builder file). A new Mac project already includes an empty `MainWindow.xib` which holds the layout of the Main Window in your Mac app, double-clicking it will open it inside a new XCode project. 
+
+### 3. Add a full-width WebView widget to your App
+
+The WebKit-based WebView widget built-in OSX provides a high-quality web browser that we can use in our app by finding it in XCode's **Object Library** (located in the bottom-right corner of XCode) and dragging it onto our **MainWindow**.
+
+To make this widget available in C# we then need to create an **Outlet** for the WebView widget by pressing `Ctrl` whilst clicking on the WebView and dragging the connecting line onto the body of the `MainWindow.h` header file, e.g:   
+
+![Add WebView Widget](https://github.com/ServiceStack/Assets/raw/master/img/gap/benchmarksanalyzer.mac-create-webview-outlet.png)
+
+This will open up a small dialog that lets you name the Outlet for the webView which is used for the property name in C#. 
+
+Unfortunately as `WebView` is not a core component XCode will show some build errors saying it can't find WebView. To resolve this we need to add the **WebKit Framework** to your project (similar to NuGet package in .NET). To do this we need to:
+
+ 1. Click on the **BenchmarksAnalyzer.Mac** XCode project file in the Project Navigator
+ 2. Click on the **BenchmarksAnalyzer.Mac** target to open its settings window
+ 3. Click on the **Build Phases** tab
+ 4. Expand the **Link Binary With Libraries** section and clock on the `+` button
+ 5. Select **Webkit.framework** to add it to your project
+
+Now that it's added to your project we can reference it by going back to `MainWindow.h` header file and add the import statement:
+
+    #import <WebKit/WebKit.h>
+
+To the list of imports, after saving the file we can close XCode and return to Xamarin Studio which will resync the changes you made so they're available in your C# source files.
+
+If you look into `MainWindow.designer.cs` source file you will notice there's a `WebView webView { get; set; }` property in the code-behind partial `MainWindow` class. We can interact with this widget when the Main Window is first loaded by overriding the `AwakeFromNib()` method with our custom initialization logic:
+
+```csharp
+public partial class MainWindow : MonoMac.AppKit.NSWindow
+{
+    ...
+
+    public override void AwakeFromNib()
+    {
+        base.AwakeFromNib();
+
+        webView.MainFrameUrl = "http://google.com";
+    }
+}
+```
+
+### 4. Starting the ServiceStack Self-Host
+
+Starting a ServiceStack Self-Host App is the same as any other app where we initialize it on AppStart which for Mac apps is conventionally in the `Main.cs` file, i.e:
+
+```csharp
+public static class MainClass
+{
+    public static AppHost App;
+
+    static void Main(string[] args)
+    {
+        App = new AppHost("http://localhost:1337/")
+            .Start();
+
+        NSApplication.Init();
+        NSApplication.Main(args);
+    }
+}
+```
+
+As we've made AppHost a static property we can access it from anywhere to retrieve the starting url, e.g:
+
+```csharp
+webView.MainFrameUrl = MainClass.App.GetStartUrl();
+```
