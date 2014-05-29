@@ -307,6 +307,8 @@ Unfortunately as `WebView` is not a core component XCode will show some build er
  4. Expand the **Link Binary With Libraries** section and clock on the `+` button
  5. Select **Webkit.framework** to add it to your project
 
+![Add WebKit Framework](https://github.com/ServiceStack/Assets/raw/master/img/gap/benchmarksanalyzer.mac-add-webview-framework.png)
+
 Now that it's added to your project we can reference it by going back to `MainWindow.h` header file and add the import statement:
 
     #import <WebKit/WebKit.h>
@@ -354,3 +356,7 @@ As we've made AppHost a static property we can access it from anywhere to retrie
 ```csharp
 webView.MainFrameUrl = MainClass.App.GetStartUrl();
 ```
+
+Which once run, will open your ServiceStack application withing a full-width OSX App, e.g:
+
+![Run ServiceStack Mac OSX App](https://github.com/ServiceStack/Assets/raw/master/img/gap/benchmarksanalyzer.mac.png)
