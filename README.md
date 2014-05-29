@@ -197,6 +197,8 @@ static void Main(string[] args)
 }
 ```
 
+![Run ServiceStack Console App](https://github.com/ServiceStack/Assets/raw/master/img/gap/benchmarksanalyzer-console.png)
+
 ## WinForms with Chromium Embedded Framework
 
 Whilst running a Self-Hosting app that launches the System browser provides a working solution, we can provide an 
@@ -276,6 +278,8 @@ static void Main()
 ```
 
 Other than that all we have to do is start ServiceStack's AppHost and pass the url we want to the form to launch with.
+
+![Run ServiceStack WinForms App](https://github.com/ServiceStack/Assets/raw/master/img/gap/benchmarksanalyzer-windows.png)
 
 ## Mac OSX Cocoa App with Xmarain.Mac
 
