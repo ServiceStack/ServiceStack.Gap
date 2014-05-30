@@ -31,6 +31,8 @@ By default `BenchmarksAnalyzer.exe` will scan the directory where it's run from,
 
 > Note: It can also be specified as a command-line argument, e.g: "BenchmarksAnalyzer.exe path\to\outputs"
 
+![Benchmarks Analyzer Usage](https://github.com/ServiceStack/Assets/raw/master/img/gap/benchmarksanalyzer-usage.gif)
+
 ### Download
 
 The Benchmarks Analyzer app is available for download in a number of different flavors below:
