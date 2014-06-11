@@ -20,8 +20,8 @@ namespace BenchmarksAnalyzer.ServiceModel.Types
         public int TotalRequests { get; set; }
         public int FailedRequests { get; set; }
         public string FailedReasons { get; set; }
-        public int TotalTransferred { get; set; }
-        public int HtmlTransferred { get; set; }
+        public long TotalTransferred { get; set; }
+        public long HtmlTransferred { get; set; }
         public double RequestsPerSec { get; set; }
         public double TimePerRequest { get; set; }
         public double TransferRate { get; set; }
