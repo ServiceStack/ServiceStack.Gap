@@ -171,8 +171,7 @@ public string GetStartUrl()
 
 The Console Application works like any other [Self Host](https://github.com/ServiceStack/ServiceStack/wiki/Self-hosting) app,
 the only difference is because it needs to also run as a single ILMerged .exe we need to call 
-[ExportMonoSqliteDll()](https://github.com/ServiceStack/ServiceStack.Gap/blob/master/src/BenchmarksAnalyzer/BenchmarksAnalyzer/AppHost.cs#L135
-) to write the unmanaged `sqlite3.dll` out to a file so it can be found by Sqlite's ADO.NET provider.
+[ExportMonoSqliteDll()](https://github.com/ServiceStack/ServiceStack.Gap/blob/66d9fc19616f924f2bbae7c8ef8ddb14ae6b612b/src/BenchmarksAnalyzer/BenchmarksAnalyzer/AppHost.cs#L175) to write the unmanaged `sqlite3.dll` out to a file so it can be found by Sqlite's ADO.NET provider.
 
 Other than that we just show a friendly reminder when it can't find any files to import, e.g:
 
