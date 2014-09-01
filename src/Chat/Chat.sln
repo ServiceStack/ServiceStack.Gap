@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat.Resources", "Chat.Resources\Chat.Resources.csproj", "{77D426EF-4375-4A35-AF5B-C8F04DB44A9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat", "Chat\Chat.csproj", "{EBCDD370-0813-456B-AEE7-0FB22C9EC586}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77D426EF-4375-4A35-AF5B-C8F04DB44A9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77D426EF-4375-4A35-AF5B-C8F04DB44A9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77D426EF-4375-4A35-AF5B-C8F04DB44A9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77D426EF-4375-4A35-AF5B-C8F04DB44A9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBCDD370-0813-456B-AEE7-0FB22C9EC586}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBCDD370-0813-456B-AEE7-0FB22C9EC586}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBCDD370-0813-456B-AEE7-0FB22C9EC586}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBCDD370-0813-456B-AEE7-0FB22C9EC586}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

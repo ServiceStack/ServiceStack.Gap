@@ -81,5 +81,5 @@ hand-edited outside the Admin UI and will be available next time the Program is 
 
 # About
 
-The source code for Benchmarks Analyzer is available at: https://github.com/ServiceStack/ServiceStack.Gap
+The source code for Benchmarks Analyzer is available at: https://github.com/ServiceStack/ServiceStack.Gap/tree/master/src/BenchmarksAnalyzer
 It's also available as a free online service at: https://httpbenchmarks.servicestack.net/
