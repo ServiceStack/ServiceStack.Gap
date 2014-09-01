@@ -23,10 +23,10 @@ namespace Chat
             var help = new HashSet<string> { "-h", "--help", "/h", "/help" };
             if (args.Any(help.Contains))
             {
-                "Usage: Chat.exe                             # Run using default appsettings.txt".Print();
-                "Usage: Chat.exe /port=1337                  # Run on port 1337".Print();
-                "Usage: Chat.exe /redis=localhost:6379       # Run using RedisServerEvents".Print();
-                "Usage: Chat.exe /background=localhost:6379  # Run using RedisServerEvents".Print();
+                "Usage: Chat.exe                          # Run using default appsettings.txt".Print();
+                "Usage: Chat.exe /port=1337               # Run on port 1337".Print();
+                "Usage: Chat.exe /redis=localhost:6379    # Run using RedisServerEvents".Print();
+                "Usage: Chat.exe /background=/img/bg.jpg  # Run using background image".Print();
                 return;
             }
 

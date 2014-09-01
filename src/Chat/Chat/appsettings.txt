@@ -1,10 +1,14 @@
-﻿# which port to host Chat on
+﻿# Which port to host Chat on
 port 1337
 
-# uncomment below to enable fan-out RedisServerEvents via redis
+# Uncomment below to enable fan-out RedisServerEvents via redis
 #redis localhost
 
+# Change what starting background image should be used
 background /img/bg.jpg
+
+# Don't allow Anon Users to use Remote Control
+LimitRemoteControlToAuthenticatedUsers False
 
 #default settings for all oauth providers uses AuthTest OAuth configured for http://localhost:1337/
 oauth.RedirectUrl http://localhost:1337/
