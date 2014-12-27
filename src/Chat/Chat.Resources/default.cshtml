@@ -1,13 +1,14 @@
 @inherits ServiceStack.Razor.ViewPage
 @{
     ViewBag.Title = "Server Sent Events Chat";
-    var channel = Request.QueryString["channel"] ?? "home";
+    var channels = Request.QueryString["channels"] ?? "home";
 }
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <title>ServiceStack Chat</title>
-        <link href="/img/favicon.png" rel="icon">         <link href="/default.css" rel="stylesheet" />
+        <link href="/img/favicon.png" rel="icon"> 
+        <link href="/default.css" rel="stylesheet" />
         <script src="/jquery-2.1.1.min.js"></script>
         <script src="/js/ss-utils.js"></script>
         <style>
@@ -31,12 +32,11 @@
             }
         </div>
         <ul id="channels" style="margin: 0 0 0 30px">
-            <li>
-                @channel
+            <li style="background: none; padding: 0 0 0 5px;">
+                <button onclick="var chan = prompt('Open another Channel in new Window:','ChannelName'); if (chan) window.open('?channels='+chan.replace(/\s+/g,''));">+</button>
             </li>
-            <li style="background:none; padding: 0 0 0 5px;">
-                <button onclick="var chan = prompt('Open another Channel in new Window:','ChannelName'); if (chan) window.open('?channel='+chan.replace(/\s+/g,''));">+</button>
-                <span style="font-size: 13px; color: #ccc" onclick="$('#log').html('')">clear</span>
+            <li style="background: none;padding: 0;">
+                <span style="font-size: 13px; color: #ccc" onclick="$('#logs [data-channel]').html('')">clear</span>
             </li>
         </ul>
     </div>
@@ -72,14 +72,20 @@
     </div>
 </div>
 
-<div id="log"></div>
+<div id="logs"></div>
 <div id="bottom">
     <input type="text" id="txtMsg" onfocus="this.value = this.value;" />
     <button id="btnSend">Send</button>
 </div>
 
 <script>
-    var source = new EventSource('/event-stream?channel=@channel&t=' + new Date().getTime()); //disable cache
+    var channels = "@channels".split(',');
+
+    $("#channels").prepend($.map(channels, function (c) { return '<li data-click="changeChannel:' + c + '" data-channel="' + c + '">' + c + '</li>'; }));
+    $("#logs").append($.map(channels, function (c) { return '<div class="channel" data-channel="' + c + '"></div>'; }));
+    var selectedChannel = function () { return $("#channels .selected").html(); };
+
+    var source = new EventSource('/event-stream?channels=@channels&t=' + new Date().getTime()); //disable cache
     source.addEventListener('error', function (e) {
         console.log(e);
         addEntry({ msg: "ERROR!", cls: "error" });
@@ -87,22 +93,28 @@
 
     var $txtMsg = $("#txtMsg").focus(), usersMap = {}, activeSub = null;
     function refreshUsers() {
-        $.getJSON("/event-subscribers?channel=@channel", function (users) {
+        $.getJSON("/event-subscribers?channels=@channels", function (users) {
             usersMap = {};
             $.map(users, function (user) { usersMap[user.userId] = user; });
-            $("#users").html($.map(usersMap, function(user) { return createUser(user); }).join(''));
+            $("#users").html($.map(channels, function (c) {
+                var usersInChannel = $.grep($.map(usersMap, function (u) { return u; }), function (u) { return u.channels.split(',').indexOf(c) >= 0; });
+                return '<div class="channel" data-channel="' + c + '">'
+                    + $.map(usersInChannel, function (u) { return createUser(u); }).join('')
+                    + '</div>';
+            }).join(''));
+            $.ss.handlers["changeChannel"](selectedChannel());
         });
     }
-    
+
     $.ss.eventReceivers = { "document": document };
     $(source).handleServerEvents({
         handlers: {
             onConnect: function (u) {
                 activeSub = u;
                 $("#welcome").html('<span>Welcome, ' + u.displayName + '</span>' + '<img src="' + u.profileUrl + '"/>');
-                $("#log").html("");
+                $("#logs .channel").html("");
                 addEntry({ msg: "CONNECTED!", cls: "open" });
-                $.getJSON("/channels/@channel/history", function (r) {
+                $.getJSON("/chathistory?channels=@channels", function (r) {
                     $.map(r.results, $.ss.handlers["chat"]);
                 });
                 refreshUsers();
@@ -110,7 +122,7 @@
             onJoin: refreshUsers,
             onLeave: refreshUsers,
             chat: function (m, e) {
-                addEntry({ id: m.id, userId: m.fromUserId, userName: m.fromName, msg: m.message, cls: m.private ? ' private' : '' });
+                addEntry({ id: m.id, userId: m.fromUserId, userName: m.fromName, msg: m.message, cls: m.private ? ' private' : '', channel: m.channel || e.channel });
             }
         },
         receivers: {
@@ -141,7 +153,7 @@
     $(document).bindHandlers({
         announce: function (msg) {
             $("#announce").html(msg).fadeIn('fast');
-            setTimeout(function() { $("#announce").fadeOut('slow'); }, 2000);
+            setTimeout(function () { $("#announce").fadeOut('slow'); }, 2000);
         },
         toggle: function () {
             $(this).toggle();
@@ -161,10 +173,16 @@
         toggleExamples: function () {
             var willHide = this.innerHTML == "hide";
             $(this).html(willHide ? "show" : "hide").parent().css({ height: willHide ? '25px' : 'auto' });
+        },
+        changeChannel: function (channel) {
+            $("[data-channel]").removeClass('selected');
+            $("[data-channel=" + channel + "]").addClass('selected');
+            $("#txtMsg").focus();
         }
     }).on('customEvent', function (e, msg, msgEvent) {
-        addEntry({ msg: "[event " + e.type + " message: " + msg + "]", cls: "event" });
+        addEntry({ msg: "[event " + e.type + " message: " + msg + "]", cls: "event", channel: msgEvent.channel });
     });
+    $.ss.handlers["changeChannel"](channels[0]);
 
     function addEntry(o) {
         console.log("addEntry", o);
@@ -174,7 +192,8 @@
         var user = o.userId && !skipUser ? "<b class='user " + id + "'>" + ($("#users ." + id).html() || inactive) + "</b>" : "<b class=" + id + ">&nbsp;</b>";
         var time = "<i>" + $.ss.tfmt12(new Date()) + "</i>";
         var highlight = o.msg.indexOf(activeSub.displayName.replace(" ", "")) >= 0 ? "highlight " : "";
-        $("#log").append("<div id='m_" + (o.id || "0") + "' class='msg " + highlight + o.cls + "'>" +
+        var filter = o.channel ? "=" + o.channel : "";
+        $("#logs [data-channel" + filter + "]").append("<div id='m_" + (o.id || "0") + "' class='msg " + highlight + o.cls + "'>" +
             user + time + "<div>" + o.msg + "</div>" + "</div>").scrollTop(1E10);
     }
     function createUser(user) {
@@ -194,7 +213,7 @@
                 to = activeSub.userId;
             } else {
                 var matches = $.grep($("#users .user span"),
-                    function(x) { return x.innerHTML.replace(" ", "").toLowerCase() === toName.toLowerCase(); });
+                    function (x) { return x.innerHTML.replace(" ", "").toLowerCase() === toName.toLowerCase(); });
                 to = matches.length > 0 ? matches[0].getAttribute("data-id") : null;
             }
             msg = parts[1];
@@ -204,17 +223,18 @@
             if (e.responseJSON && e.responseJSON.responseStatus)
                 $.ss.handlers["announce"](e.responseJSON.responseStatus.message);
         };
+        var channel = selectedChannel();
         if (msg[0] == "/") {
             parts = $.ss.splitOnFirst(msg, " ");
-            $.post("/channels/@channel/raw", { from: activeSub.id, toUserId: to, message: parts[1], selector: parts[0].substring(1) }, function(){}).fail(onError);
+            $.post("/channels/" + channel + "/raw", { from: activeSub.id, toUserId: to, message: parts[1], selector: parts[0].substring(1) }, function () { }).fail(onError);
         } else {
-            $.post("/channels/@channel/chat", { from: activeSub.id, toUserId: to, message: msg, selector: "cmd.chat" }, function(){}).fail(onError);
+            $.post("/channels/" + channel + "/chat", { from: activeSub.id, toUserId: to, message: msg, selector: "cmd.chat" }, function () { }).fail(onError);
         }
         $txtMsg.val("");
     }
     $("#btnSend").click(postMsg);
 
-    $txtMsg.keydown(function(e) {
+    $txtMsg.keydown(function (e) {
         var keycode = (e.keyCode ? e.keyCode : e.which);
         if ($.ss.getSelection()) {
             if (keycode == '9' || keycode == '13' || keycode == '32' || keycode == '39') {
@@ -240,7 +260,7 @@
         if (!$.ss.getSelection() && this.value[0] == '@@' && this.value.indexOf(' ') < 0) {
             var partialVal = this.value.substring(1);
             var matchingNames = $.grep($("#users .user span")
-                .map(function() { return this.innerHTML.replace(" ", ""); }), function(x) {
+                .map(function () { return this.innerHTML.replace(" ", ""); }), function (x) {
                     return x.substring(0, partialVal.length).toLowerCase() === partialVal.toLowerCase()
                         && x.toLowerCase() != activeSub.displayName.toLowerCase();
                 });

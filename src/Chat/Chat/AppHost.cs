@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -65,7 +66,7 @@ namespace Chat
 
             if (RedisHost != null)
             {
-                container.Register<IRedisClientsManager>(new PooledRedisClientManager(RedisHost));
+                container.Register<IRedisClientsManager>(new RedisManagerPool(RedisHost));
 
                 container.Register<IServerEvents>(c =>
                     new RedisServerEvents(c.Resolve<IRedisClientsManager>()));
@@ -138,6 +139,7 @@ namespace Chat
     public class ChatMessage
     {
         public long Id { get; set; }
+        public string Channel { get; set; }
         public string FromUserId { get; set; }
         public string FromName { get; set; }
         public string DisplayName { get; set; }
@@ -156,10 +158,10 @@ namespace Chat
         public string Selector { get; set; }
     }
 
-    [Route("/channels/{Channel}/history")]
+    [Route("/chathistory")]
     public class GetChatHistory : IReturn<GetChatHistoryResponse>
     {
-        public string Channel { get; set; }
+        public string[] Channels { get; set; }
         public long? AfterId { get; set; }
         public int? Take { get; set; }
     }
@@ -213,6 +215,7 @@ namespace Chat
             var msg = new ChatMessage
             {
                 Id = ChatHistory.GetNextMessageId(channel),
+                Channel = request.Channel,
                 FromUserId = sub.UserId,
                 FromName = sub.DisplayName,
                 Message = request.Message,
@@ -250,9 +253,15 @@ namespace Chat
 
         public object Any(GetChatHistory request)
         {
+            var msgs = request.Channels.Map(x =>
+                ChatHistory.GetRecentChatHistory(x, request.AfterId, request.Take))
+                .SelectMany(x => x)
+                .OrderBy(x => x.Id)
+                .ToList();
+
             return new GetChatHistoryResponse
             {
-                Results = ChatHistory.GetRecentChatHistory(request.Channel, request.AfterId, request.Take)
+                Results = msgs
             };
         }
     }
