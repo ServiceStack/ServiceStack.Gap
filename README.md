@@ -63,6 +63,22 @@ to run the Program to view the above example dataset with the custom configurati
 See the included [README.txt](https://github.com/ServiceStack/ServiceStack.Gap/blob/master/src/BenchmarksAnalyzer/build/README.txt)
 for more Benchmark Analyzer features and how to markup the charts with custom labels.
 
+## Redis Server Events Chat
+
+![Redis ServerEvents Scale Out](https://raw.githubusercontent.com/ServiceStack/Assets/master/img/gap/Chat/redis-scaleout.png)
+
+### Cross-platform Memory and Redis ServerEvent Enabled Chat.exe
+
+To showcase [Redis ServerEvents](https://github.com/ServiceStack/ServiceStack/wiki/Redis-Server-Events) in action, we've prepared a stand-alone [ServiceStack.Gap](https://github.com/ServiceStack/ServiceStack.Gap) version of [Chat](http://chat.servicestack.net) compiled down into a single **Chat.exe** that can run on either Windows and OSX with Mono which can be downloaded from: 
+
+### [Chat.zip](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/Chat.zip) (1.2MB)
+
+[![Redis ServerEvents Preview](https://raw.githubusercontent.com/ServiceStack/Assets/master/img/release-notes/redis-server-events.gif)](https://github.com/ServiceStack/ServiceStack.Gap/raw/master/deploy/Chat.zip)
+
+[Usage instructions for Redis ServerEvents Chat App](https://github.com/ServiceStack/ServiceStack/wiki/Redis-Server-Events#redis-serverevents-chat-usage)
+
+----
+
 ## Creating an embedded ServiceStack App
 
 To create the portable version of Benchmarks Analyzer we simply 
