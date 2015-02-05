@@ -79,7 +79,7 @@ To showcase [Redis ServerEvents](https://github.com/ServiceStack/ServiceStack/wi
 
 ----
 
-## Creating an embedded ServiceStack App
+# Creating an embedded ServiceStack App
 
 To create the portable version of Benchmarks Analyzer we simply 
 [copied the resources from HttpBenchmarks](https://github.com/ServiceStack/ServiceStack.Gap/blob/master/src/BenchmarksAnalyzer/build/init-copy-resources.done) project 
